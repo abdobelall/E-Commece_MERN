@@ -1,4 +1,4 @@
-import { cartModel } from "../models/cartModel.js";
+import { Cart } from "../models/cartModel.js";
 
 interface CreateCartForUser {
     userId: string;
@@ -6,5 +6,5 @@ interface CreateCartForUser {
 
 const createCartforUser = async ({ userId }: CreateCartForUser) => {
 
-    const cart = await cartModel.create({ userId });
+    const cart = await Cart.create({ userId });
 }
