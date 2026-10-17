@@ -27,5 +27,5 @@ const cartSchema = new Schema<ICart>({
   status: { type: String, enum: ["active", "completed"], default: "active" },
 });
 
-export const Cart = model<ICart>("Cart", cartSchema);
+export const cartModel = model<ICart>("Cart", cartSchema);
 
