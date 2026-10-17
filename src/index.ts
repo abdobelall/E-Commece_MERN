@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import { seedInitialProducts } from "./service/productService.js";
+import cartRoute from "./routes/cartRoute.js";
 
 const app = express();
 const PORT = 3000;
@@ -20,6 +21,7 @@ seedInitialProducts();
 
 app.use("/product", productRoute);
 app.use("/user", userRoute);
+app.use("/cart", cartRoute);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
