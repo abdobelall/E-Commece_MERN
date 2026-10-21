@@ -4,28 +4,38 @@ interface CreateCartForUser {
     userId: string;
 }
 
-export const createCartforUser = async ({ userId }: CreateCartForUser) => {
+export const createCartforUser = async ({
+    userId,
+}: CreateCartForUser) => {
+    const cart = await cartModel.create({
+        userId,
+        totalAmount: 0,
+        status: "active",
+    });
 
-    const cart = await cartModel.create({ userId });
-    await cart.save();
     return cart;
-}
+};
 
 interface GetActiveCartForUser {
     userId: string;
 }
 
-export const getActiveCartForUser = async ({ userId }: GetActiveCartForUser) => {
-    let cart = await cartModel.findOne({ userId, status: "active" })
+export const getActiveCartForUser = async ({
+    userId,
+}: GetActiveCartForUser) => {
+    let cart = await cartModel.findOne({
+        userId,
+        status: "active",
+    });
 
     if (!cart) {
         cart = await createCartforUser({ userId });
     }
 
     return cart;
-}
+};
 
 export default {
     createCartforUser,
-    getActiveCartForUser
-}
+    getActiveCartForUser,
+};

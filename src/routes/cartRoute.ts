@@ -1,11 +1,15 @@
 import express from "express";
 import { getActiveCartForUser } from "../service/cartService.js";
+import validateJWT from "../middlewares/validateJWT.js";
 
 const router = express.Router();
 
-router.get("/",async (req, res) => {
-    //xxx
-    const cart = await getActiveCartForUser({ userId : "xxx" });
+router.get("/", validateJWT, async (req, res) => {
+    
+    const userId = req.user._id;
+
+    const cart = await getActiveCartForUser({ userId });
+
     res.status(200).send(cart);
 })
 

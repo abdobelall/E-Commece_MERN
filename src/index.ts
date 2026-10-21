@@ -2,8 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
-import { seedInitialProducts } from "./service/productService.js";
 import cartRoute from "./routes/cartRoute.js";
+import { seedInitialProducts } from "./service/productService.js";
 
 const app = express();
 const PORT = 3000;
