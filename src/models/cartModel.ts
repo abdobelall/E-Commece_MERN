@@ -1,7 +1,7 @@
 import {Schema, model, Document, type ObjectId} from "mongoose";
 import type { Iproduct } from "./productModel.js";
 
-export interface ICartItem extends Document {
+export interface ICartItem {
   product: Iproduct;
   uintPrice: number;
   quantity: number;
@@ -10,7 +10,7 @@ export interface ICartItem extends Document {
 export interface ICart extends Document {
     userId : ObjectId | string;
     items: ICartItem[];
-    toatalPrice: number;
+    totalPrice: number;
     status: "active" | "completed";
     totalAmount: number;
 }
@@ -24,7 +24,6 @@ const cartItemSchema = new Schema<ICartItem>({
 const cartSchema = new Schema<ICart>({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   items: [cartItemSchema],
-  toatalPrice: { type: Number, required: true },
   totalAmount: {type: Number, default: 0},
   status: { type: String, enum: ["active", "completed"], default: "active" },
 });

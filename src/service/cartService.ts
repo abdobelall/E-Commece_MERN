@@ -1,4 +1,5 @@
 import { cartModel } from "../models/cartModel.js";
+import productModel from "../models/productModel.js";
 
 interface CreateCartForUser {
     userId: string;
@@ -35,7 +36,44 @@ export const getActiveCartForUser = async ({
     return cart;
 };
 
+
+
+interface AddItemToCart {
+    userId: string;
+    productId: any;
+    quantity: number;
+}
+
+const addItemToCart = async ({ userId, productId, quantity }: AddItemToCart) => {
+
+    const cart = await getActiveCartForUser({ userId });
+
+    const existsInCart = cart.items.find((p) => p.product === productId);
+
+    if(existsInCart){
+        return {data : "Product already exists in cart", status : 400};
+    }
+
+    const product = await productModel.findById(productId);
+
+    if (!product) {
+        return {data : "Product not found", status : 404};
+    }
+
+    cart.items.push({
+        product: productId,
+        uintPrice: product.price,
+        quantity,
+    });
+
+    const updatedCart = await cart.save();
+    
+    return {data : updatedCart, status : 200};
+}   
+
 export default {
     createCartforUser,
     getActiveCartForUser,
+    addItemToCart
 };
+
