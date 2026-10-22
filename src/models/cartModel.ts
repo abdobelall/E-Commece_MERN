@@ -3,7 +3,7 @@ import type { Iproduct } from "./productModel.js";
 
 export interface ICartItem {
   product: Iproduct;
-  uintPrice: number;
+  unitPrice: number;
   quantity: number;
 }
 
@@ -17,7 +17,7 @@ export interface ICart extends Document {
 
 const cartItemSchema = new Schema<ICartItem>({
   product: { type: Object, required: true },
-  uintPrice: { type: Number, required: true },
+  unitPrice: { type: Number, required: true },
   quantity: { type: Number, required: true },
 });
 

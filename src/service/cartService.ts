@@ -60,11 +60,17 @@ const addItemToCart = async ({ userId, productId, quantity }: AddItemToCart) => 
         return {data : "Product not found", status : 404};
     }
 
+    if(product.stock < quantity){
+        return {data : "No enough stock", status : 400};
+    }
+
     cart.items.push({
         product: productId,
-        uintPrice: product.price,
+        unitPrice: product.price,
         quantity,
     });
+
+    cart.totalAmount += product.price * quantity;
 
     const updatedCart = await cart.save();
     
