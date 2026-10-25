@@ -1,4 +1,5 @@
 import { cartModel, ICartItem } from "../models/cartModel.js";
+import orderModel, { IOrderItem } from "../models/orderModel.js";
 import productModel from "../models/productModel.js";
 
 const calculateCartTotalItems = ({
@@ -164,6 +165,59 @@ const clearCart = async ({ userId }: ClearCart) => {
   return { data: updatedCart, status: 200 };
 };
 
+
+interface Checkout {
+  userId: string;
+  address: string;
+}
+
+
+const checkout = async ({ userId, address }: Checkout) => {
+
+  if(!address){
+    return {data : "Please, Enter the address", status :400}
+  }
+
+  const cart = await getActiveCartForUser({ userId });
+
+  const orderItems: IOrderItem[] = [];
+
+  for (const item of cart.items) {
+    const product: any = await productModel.findById(item.product);
+
+    if (!product) {
+      return { data: "Product not found", status: 404 };
+    }
+
+    const orderItem: IOrderItem = {
+      productTitle: product.title,
+      productImage: product.image,
+      unitPrice: product.price,
+      quantity: item.quantity,
+    };
+
+    orderItems.push(orderItem);
+  }
+
+  const order = await orderModel.create({
+    orderItems,
+    total: cart.totalAmount,
+    address,
+    userId,
+  });
+
+  cart.status = "completed";
+
+  await order.save()
+
+  await cart.save();
+
+  return { data: order, status: 200 };
+};
+
+
+
+
 export default {
   createCartforUser,
   getActiveCartForUser,
@@ -171,6 +225,9 @@ export default {
   updateCartItem,
   deleteItemFromCart,
   clearCart,
+  checkout,
 };
+
+
 
 

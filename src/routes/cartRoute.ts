@@ -3,6 +3,7 @@ import validateJWT from "../middlewares/validateJWT.js";
 import cartService, { getActiveCartForUser } from "../service/cartService.js";
 import deleteItemFromCart from "../service/cartService.js";
 import clearCart from "../service/cartService.js";
+import { extendedRequest } from "../types/extendedRequest.js";
 
 const router = express.Router();
 
@@ -41,6 +42,13 @@ router.delete("/", validateJWT, async (req, res) => {
     const response = await cartService.clearCart({ userId });
     res.status(response.status).send(response.data);
 })
+
+router.post("/checkout", validateJWT, async (req : extendedRequest , res) => {
+    const userId = req.user._id;
+    const { address } = req.body
+    const response = await cartService.checkout({ userId, address });
+    res.status(response.status).send(response.data);
+});
 
 
 export default router;
