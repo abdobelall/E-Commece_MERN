@@ -54,23 +54,22 @@ interface AddItemToCart {
 const addItemToCart = async ({ userId, productId, quantity }: AddItemToCart) => {
   const cart = await getActiveCartForUser({ userId });
 
-  // تحويل product إلى string للمقارنة السليمة مع productId
   const existsInCart = cart.items.find(
     (p) => p.product.toString() === productId.toString()
   );
 
   if (existsInCart) {
-    return { data: "Product already exists in cart", status: 400 };
+    return { data: "Product already exists in cart", statusCode: 400 };
   }
 
   const product = await productModel.findById(productId);
 
   if (!product) {
-    return { data: "Product not found", status: 404 };
+    return { data: "Product not found", statusCode: 404 };
   }
 
   if (product.stock < quantity) {
-    return { data: "No enough stock", status: 400 };
+    return { data: "No enough stock", statusCode: 400 };
   }
 
   cart.items.push({
@@ -83,7 +82,7 @@ const addItemToCart = async ({ userId, productId, quantity }: AddItemToCart) => 
 
   const updatedCart = await cart.save();
 
-  return { data: updatedCart, status: 200 };
+  return { data: updatedCart, statusCode: 200 };
 };
 
 interface UpdateCartItem {
@@ -100,26 +99,25 @@ const updateCartItem = async ({ userId, productId, quantity }: UpdateCartItem) =
   );
 
   if (!existsInCart) {
-    return { data: "Product not found in cart", status: 400 };
+    return { data: "Product not found in cart", statusCode: 400 };
   }
 
   const product = await productModel.findById(productId);
 
   if (!product) {
-    return { data: "Product not found", status: 404 };
+    return { data: "Product not found", statusCode: 404 };
   }
 
   if (product.stock < quantity) {
-    return { data: "No enough stock", status: 400 };
+    return { data: "No enough stock", statusCode: 400 };
   }
 
-  // تحديث الكمية ثم إعادة حساب الإجمالي مباشرة
   existsInCart.quantity = quantity;
   cart.totalAmount = calculateCartTotalItems({ cartItems: cart.items });
 
   const updatedCart = await cart.save();
 
-  return { data: updatedCart, status: 200 };
+  return { data: updatedCart, statusCode: 200 };
 };
 
 interface DeleteItemFromCart {
@@ -135,7 +133,7 @@ const deleteItemFromCart = async ({ userId, productId }: DeleteItemFromCart) => 
   );
 
   if (!existsInCart) {
-    return { data: "Product not found in cart", status: 400 };
+    return { data: "Product not found in cart", statusCode: 400 };
   }
 
   const otherCartItems = cart.items.filter(
@@ -147,7 +145,7 @@ const deleteItemFromCart = async ({ userId, productId }: DeleteItemFromCart) => 
 
   const updatedCart = await cart.save();
 
-  return { data: updatedCart, status: 200 };
+  return { data: updatedCart, statusCode: 200 };
 };
 
 interface ClearCart {
@@ -162,20 +160,17 @@ const clearCart = async ({ userId }: ClearCart) => {
 
   const updatedCart = await cart.save();
 
-  return { data: updatedCart, status: 200 };
+  return { data: updatedCart, statusCode: 200 };
 };
-
 
 interface Checkout {
   userId: string;
   address: string;
 }
 
-
 const checkout = async ({ userId, address }: Checkout) => {
-
-  if(!address){
-    return {data : "Please, Enter the address", status :400}
+  if (!address) {
+    return { data: "Please, Enter the address", statusCode: 400 };
   }
 
   const cart = await getActiveCartForUser({ userId });
@@ -186,7 +181,7 @@ const checkout = async ({ userId, address }: Checkout) => {
     const product: any = await productModel.findById(item.product);
 
     if (!product) {
-      return { data: "Product not found", status: 404 };
+      return { data: "Product not found", statusCode: 404 };
     }
 
     const orderItem: IOrderItem = {
@@ -208,15 +203,11 @@ const checkout = async ({ userId, address }: Checkout) => {
 
   cart.status = "completed";
 
-  await order.save()
-
+  await order.save();
   await cart.save();
 
-  return { data: order, status: 200 };
+  return { data: order, statusCode: 200 };
 };
-
-
-
 
 export default {
   createCartforUser,
