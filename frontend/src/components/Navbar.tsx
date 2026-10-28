@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -15,66 +14,62 @@ import AdbIcon from '@mui/icons-material/Adb';
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
- 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" elevation={2}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
+        <Toolbar disableGutters sx={{ minHeight: '64px' }}>
+          {/* قسم الشعار والنص بأبعاد متناسقة ومتوازنة بصرياً */}
+          <Box
             component="a"
             href="#app-bar-with-responsive-menu"
             sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
+              display: 'inline-flex',
+              alignItems: 'center',
               textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
+              color: 'inherit',
               flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              userSelect: 'none',
             }}
           >
-            LOGO
-          </Typography>
+            <AdbIcon
+              sx={{
+                fontSize: '1.9rem',
+                mr: 0.75,
+                transform: 'translateY(-1.5px)', // رفع الأيقونة قليلاً لتتطابق رأسياً مع ارتفاع الحروف
+                display: 'block',
+              }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                fontSize: '1.45rem',
+                fontWeight: 900,
+                letterSpacing: '0.04em',
+                fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+                lineHeight: 1,
+                display: 'inline-block',
+              }}
+            >
+              MR
+            </Typography>
+          </Box>
 
+          {/* قائمة المستخدم والأفاتار */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -105,4 +100,5 @@ function Navbar() {
     </AppBar>
   );
 }
+
 export default Navbar;
